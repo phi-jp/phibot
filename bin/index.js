@@ -18,7 +18,7 @@ var T = new Twit({
 });
 
 
-var tweet = function() {
+var tweet = function(callback) {
   rss.pick('http://phiary.me/rss?limit=500', function(item) {
     var categories = item.categories.map(function(c) {
       return '#' + c;
@@ -28,13 +28,23 @@ var tweet = function() {
     var message = [item.title, item.link, categories.join(' ')].join(' ');
     console.log(message);
 
-    T.post('statuses/update', { status: message }, function(err, data, response) {
-      console.log('Tweet!');
-    });
+    // T.post('statuses/update', { status: message }, function(err, data, response) {
+    //   console.log('Tweet!');
+    // });
+
+    callback && callback(message);
   });
 };
 
 tweet();
+
+
+app.post('/post', function(req, res) {
+  tweet(function(message) {
+    res.send(message);
+  });
+});
+
 
 var cronTime = '0 0 0-14 * * *';
 
