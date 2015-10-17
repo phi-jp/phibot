@@ -28,9 +28,9 @@ var tweet = function(callback) {
     var message = [item.title, item.link, categories.join(' ')].join(' ');
     console.log(message);
 
-    // T.post('statuses/update', { status: message }, function(err, data, response) {
-    //   console.log('Tweet!');
-    // });
+    T.post('statuses/update', { status: message }, function(err, data, response) {
+      console.log('Tweet!');
+    });
 
     callback && callback(message);
   });
