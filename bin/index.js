@@ -21,8 +21,8 @@ var T = new Twit({
 var tweet = function(callback) {
   rss.pick('http://phiary.me/rss?limit=500', function(item) {
     var categories = item.categories.map(function(c) {
-      return '#' + c;
-    })
+      return '#' + c.replace(' ', '_');
+    });
     categories.push('#phiary');
 
     var message = [item.title, item.link, categories.join(' ')].join(' ');
