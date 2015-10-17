@@ -36,8 +36,6 @@ var tweet = function(callback) {
   });
 };
 
-tweet();
-
 
 app.post('/post', function(req, res) {
   tweet(function(message) {
