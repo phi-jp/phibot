@@ -5,11 +5,6 @@ var Twit = require('twit');
 var CronJob = require('cron').CronJob;
 var moment = require('moment');
 
-// 
-var FeedParser = require('feedparser');
-var request = require('request');
-
-
 var T = new Twit({
   consumer_key: app.get('options').key,
   consumer_secret: app.get('options').secret,
@@ -18,27 +13,47 @@ var T = new Twit({
 });
 
 
-var tweet = function(callback) {
-  rss.pick('http://phiary.me/rss?limit=500', function(item) {
+var tweet = function(mode, callback) {
+  var rssCallback = function(item) {
+    item.categories = item.categories || [];
     var categories = item.categories.map(function(c) {
       return '#' + c.replace(' ', '_');
     });
     categories.push('#phiary');
 
     var message = [item.title, item.link, categories.join(' ')].join(' ');
-    console.log(message);
 
     T.post('statuses/update', { status: message }, function(err, data, response) {
       console.log('Tweet!');
     });
 
     callback && callback(message);
-  });
+  };
+
+  var path = 'http://phiary.me/rss?limit=500';
+
+  if (mode === 'random') {
+    rss.pick('http://phiary.me/rss?limit=500', rssCallback);
+  }
+  else if (mode === 'latest') {
+    rss.latest('http://phiary.me/rss?limit=500', rssCallback);
+  }
 };
 
 
 app.post('/post', function(req, res) {
-  tweet(function(message) {
+  console.log('post');
+  tweet('random', function(message) {
+    console.log(message);
+    res.send(message);
+  });
+});
+
+
+app.post('/latest', function(req, res) {
+  console.log('latest');
+  tweet('latest', function(message) {
+    console.log(message);
     res.send(message);
   });
 });

@@ -32,4 +32,10 @@ module.exports = {
       callback && callback(item);
     });
   },
+
+  latest: function(path, callback) {
+    this.get(path, function(meta, items) {
+      callback && callback(items[0]);
+    });
+  },
 };

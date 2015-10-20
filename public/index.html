@@ -13,11 +13,17 @@
   <body>
     <h1>Hello, runstant!</h1>
     <button onclick='post();'>POST</button>
+    <button onclick='latest()'>Latest</button>
   </body>
 
   <script>
   var post = function() {
     $.post('/post').done(function(res) {
+      console.log(res);
+    });
+  };
+  var latest = function() {
+    $.post('/latest').done(function(res) {
       console.log(res);
     });
   };
